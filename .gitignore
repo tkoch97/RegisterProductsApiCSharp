@@ -1,0 +1,55 @@
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# DotCover
+*.dotCover
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Dependency cache
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Auto-generated files
+*.generated.cs
+
+# EF Core Migrations snapshots (opcional manter)
+Migrations/*Snapshot.cs
+
+# ASP.NET Core secrets
+**/appsettings.Development.json
+**/appsettings.Local.json
+secrets.json
+
+# Logs
+*.log
+logs/
+*.tlog
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Global tool restore
+.dotnet_tool/
