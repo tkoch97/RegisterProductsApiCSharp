@@ -9,7 +9,7 @@ namespace RegisterProductsAPI.Data
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlite(connectionString: "DataSource=products.db;Cache=Shared");
+      optionsBuilder.UseSqlite(connectionString: "DataSource=app.db;Cache=Shared");
     }
   }
 }
