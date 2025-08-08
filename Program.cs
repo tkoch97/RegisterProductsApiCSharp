@@ -8,9 +8,6 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseAuthentication();
 
-app.UseEndpoints(e =>
-{
-  e.MapControllers();
-});
+app.MapControllers();
 
 app.Run();
