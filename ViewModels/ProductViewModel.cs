@@ -13,4 +13,11 @@ namespace RegisterProductsAPI.ViewModels
 
     public int Stock { get; set; }
   }
+
+  public class UpdateProductViewModel
+  {
+    public string Name { get; set; } = String.Empty;
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+  }
 }
