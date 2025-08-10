@@ -53,7 +53,7 @@ namespace RegisterProductsApi.Controllers
     }
 
     [HttpPut("products/{id}")]
-    public IActionResult UpdatebyId(
+    public IActionResult UpdateById(
       [FromRoute] int id,
       [FromBody] UpdateProductViewModel model
       )
