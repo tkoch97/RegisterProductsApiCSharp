@@ -6,7 +6,7 @@ namespace RegisterProductsAPI.Services
 {
   public class ProductService(IProductRepository _repository)
   {
-    public async Task<List<Product>> ListProducts()
+    public async Task<List<Product>> ListAllProducts()
     {
       var products = await _repository.GetAllProductsAsync();
       if (products == null || products.Count == 0)
