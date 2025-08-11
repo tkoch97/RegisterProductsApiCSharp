@@ -1,14 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using RegisterProductsAPI.Data;
+using RegisterProductsAPI.Interfaces;
 using RegisterProductsAPI.Models;
 
 namespace RegisterProductsAPI.Repository
 {
-  public class ProductsRepository
+  public class ProductsRepository : IProductRepository
   {
-    public async Task<List<Product>> ListAllProducts(AppDbContext context)
+    private readonly AppDbContext _context;
+
+    public ProductsRepository(AppDbContext context)
     {
-      var products = await context.Products.ToListAsync();
+      _context = context;
+    }
+    public async Task<List<Product>> GetAllProductsAsync()
+    {
+      var products = await _context.Products.ToListAsync();
       return products;
     }
   }

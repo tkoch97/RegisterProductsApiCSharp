@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RegisterProductsAPI.Mock;
 using RegisterProductsAPI.Models;
+using RegisterProductsAPI.Repository;
 using RegisterProductsAPI.Services;
 using RegisterProductsAPI.ViewModels;
 
@@ -12,22 +13,23 @@ namespace RegisterProductsApi.Controllers
   {
     private readonly ProductService _service;
 
-    // public ProductController()
-    // {
-    //   _service = new ProductService();
-    // }
+    public ProductController(ProductService service)
+    {
+      _service = service;
+    }
 
     [HttpGet("products")]
     public async Task<IActionResult> GetAll()
     {
+
       try
       {
-        var products = await _service.ListProductsAsync();
+        var products = await _service.ListAllProducts();
         return Ok(products);
       }
       catch (Exception ex)
       {
-        return BadRequest("Erro ao buscar produtos: " + ex.Message);
+        return NotFound(ex.Message);
       }
     }
 

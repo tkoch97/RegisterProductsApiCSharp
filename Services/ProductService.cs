@@ -1,23 +1,15 @@
 using RegisterProductsAPI.Data;
+using RegisterProductsAPI.Interfaces;
 using RegisterProductsAPI.Models;
-using RegisterProductsAPI.Repository;
 
 namespace RegisterProductsAPI.Services
 {
-  public class ProductService
+  public class ProductService(IProductRepository _repository)
   {
-    private readonly AppDbContext _context;
-    private readonly ProductsRepository _repository;
-
-    public ProductService(AppDbContext context) //constructor
+    public async Task<List<Product>> ListProducts()
     {
-      _context = context;
-      _repository = new ProductsRepository();
-    }
-    public async Task<List<Product>> ListProductsAsync()
-    {
-      var products = await _repository.ListAllProducts(_context);
-      if (products == null)
+      var products = await _repository.GetAllProductsAsync();
+      if (products == null || products.Count == 0)
       {
         throw new Exception("Nenhum produto na lista");
       }
