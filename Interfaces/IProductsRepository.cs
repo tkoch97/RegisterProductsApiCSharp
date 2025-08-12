@@ -1,4 +1,5 @@
 using RegisterProductsAPI.Models;
+using RegisterProductsAPI.ViewModels;
 
 namespace RegisterProductsAPI.Interfaces
 {
@@ -7,7 +8,7 @@ namespace RegisterProductsAPI.Interfaces
     Task<List<Product>> GetAllProductsAsync();
     Task<Product> AddNewProductAsync(Product newProduct);
     Task<Product> DeleteProductAsync(int id);
+    Task<Product> UpdateProductAsync(int id, UpdateProductViewModel dataToUpdateProduct);
     // Task<Product> GetProductByIdAsync(int id);
-    // Task<dynamic> UpdateProductAsync(int id, Product updatedProduct);
   }
 }

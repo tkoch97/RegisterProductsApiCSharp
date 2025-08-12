@@ -35,5 +35,15 @@ namespace RegisterProductsAPI.Services
     {
       return await _repository.DeleteProductAsync(id);
     }
+
+    public async Task<Product> UpdateProduct(int id, UpdateProductViewModel dataToUpdateProduct)
+    {
+      var product = await _repository.UpdateProductAsync(id, dataToUpdateProduct);
+      if (product != null)
+      {
+        return product;
+      }
+      throw new Exception("Produto não encontrado para atualização.");
+    }
   }
 }

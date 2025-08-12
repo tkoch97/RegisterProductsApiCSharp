@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using RegisterProductsAPI.Mock;
 using RegisterProductsAPI.Models;
@@ -68,37 +70,30 @@ namespace RegisterProductsApi.Controllers
       }
     }
 
-    // [HttpPut("products/{id}")]
-    // public IActionResult UpdateById(
-    //   [FromRoute] int id,
-    //   [FromBody] UpdateProductViewModel model
-    //   )
-    // {
-    //   var productToUpdate = products.FirstOrDefault(p => p.Id == id);
-    //   if (productToUpdate == null)
-    //   {
-    //     return NotFound("Não foi possível encontrar o produto desejado");
-    //   }
-    //   try
-    //   {
-    //     var updatedProduct = new Product(
-    //       productToUpdate.Id,
-    //       model.Name,
-    //       model.Price,
-    //       model.Stock
-    //     );
-
-    //     var indexOfProductToUpdate = products.IndexOf(productToUpdate);
-    //     products[indexOfProductToUpdate] = updatedProduct;
-
-    //     return Ok($"Produto atualizado com sucesso");
-
-    //   }
-    //   catch (Exception error)
-    //   {
-    //     return BadRequest($"Erro ao atualizar o produto. {error.Message}");
-    //   }
-    // }
+    [HttpPut("products/{id}")]
+    public async Task<IActionResult> UpdateById(
+      [FromRoute] int id,
+      [FromBody] UpdateProductViewModel dataToUpdateProduct
+      )
+    {
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+      try
+      {
+        var updatedProduct = await _service.UpdateProduct(id, dataToUpdateProduct);
+        return Ok(new
+        {
+          message = "Produto atualizado com sucesso!",
+          product = updatedProduct
+        });
+      }
+      catch (Exception error)
+      {
+        return BadRequest(new { message = $"Erro ao atualizar o produto. {error.Message}" });
+      }
+    }
 
     // [HttpGet("products/{id}")]
     // public IActionResult GetById([FromRoute] int id)

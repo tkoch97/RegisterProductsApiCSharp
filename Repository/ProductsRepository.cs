@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RegisterProductsAPI.Data;
 using RegisterProductsAPI.Interfaces;
 using RegisterProductsAPI.Models;
+using RegisterProductsAPI.ViewModels;
 
 namespace RegisterProductsAPI.Repository
 {
@@ -33,6 +34,17 @@ namespace RegisterProductsAPI.Repository
       _context.Products.Remove(productToDelete);
       await _context.SaveChangesAsync();
       return productToDelete;
+    }
+
+    public async Task<Product> UpdateProductAsync(int id, UpdateProductViewModel dataToUpdateProduct)
+    {
+      var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+      product.Name = dataToUpdateProduct.Name;
+      product.Price = dataToUpdateProduct.Price;
+      product.Stock = dataToUpdateProduct.Stock;
+      _context.Products.Update(product);
+      await _context.SaveChangesAsync();
+      return product;
     }
   }
 }
