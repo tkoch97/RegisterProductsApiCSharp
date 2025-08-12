@@ -6,9 +6,21 @@ namespace RegisterProductsAPI.Mock
   {
     public static readonly List<Product> ProductsMock =
       [
-        new Product(1, "Notebook", 5000, 10),
-        new Product(2, "Mouse", 200, 20),
-        new Product(3, "Boby Goods", 300, 10)
+        new Product{
+          Name = "Notebbok",
+          Price = 5000,
+          Stock = 10
+        },
+        new Product{
+          Name = "Mouse",
+          Price = 100,
+          Stock = 15
+        },
+        new Product{
+          Name = "Teclado",
+          Price = 500,
+          Stock = 20
+        },
       ];
   }
 }

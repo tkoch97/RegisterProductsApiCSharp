@@ -33,6 +33,27 @@ namespace RegisterProductsApi.Controllers
       }
     }
 
+    [HttpPost("products")]
+    public async Task<IActionResult> PostProduct([FromBody] CreateProductViewModel newProductData)
+    {
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+      try
+      {
+        var newProductAdded = await _service.AddNewProduct(newProductData);
+        return Created($"api/products/{newProductAdded.Id}", new
+        {
+          message = $"{newProductAdded.Name} adicinado com sucesso!"
+        });
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"Não foi possível adicionar o produto: {ex.Message}");
+      }
+    }
+
     // [HttpGet("products/{id}")]
     // public IActionResult GetById([FromRoute] int id)
     // {
@@ -40,24 +61,6 @@ namespace RegisterProductsApi.Controllers
     //   return product == null ? NotFound("Nenhum produto encontrado") : Ok(product);
     // }
 
-    // [HttpPost("products")]
-    // public IActionResult Post([FromBody] CreateProductViewModel model)
-    // {
-    //   if (!ModelState.IsValid)
-    //   {
-    //     return BadRequest(ModelState);
-    //   }
-    //   var newProduct = new Product
-    //   (
-    //     products.Count + 1,
-    //     model.Name,
-    //     model.Price,
-    //     model.Stock
-    //   );
-
-    //   products.Add(newProduct);
-    //   return Ok($"{newProduct.Name} adicionado(a) com sucesso");
-    // }
 
     // [HttpDelete("products/{id}")]
     // public IActionResult DeleteById([FromRoute] int id)

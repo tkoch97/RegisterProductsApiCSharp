@@ -18,5 +18,12 @@ namespace RegisterProductsAPI.Repository
       var products = await _context.Products.ToListAsync();
       return products;
     }
+
+    public async Task<Product> AddNewProductAsync(Product newProduct)
+    {
+      await _context.Products.AddAsync(newProduct);
+      await _context.SaveChangesAsync();
+      return newProduct;
+    }
   }
 }

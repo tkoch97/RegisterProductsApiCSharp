@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using RegisterProductsAPI.Data;
 using RegisterProductsAPI.Interfaces;
 using RegisterProductsAPI.Models;
+using RegisterProductsAPI.ViewModels;
 
 namespace RegisterProductsAPI.Services
 {
@@ -15,5 +17,20 @@ namespace RegisterProductsAPI.Services
       }
       return products;
     }
+
+    public async Task<Product> AddNewProduct(CreateProductViewModel newProductData)
+    {
+
+      var newProduct = new Product
+      {
+        Name = newProductData.Name,
+        Price = newProductData.Price,
+        Stock = newProductData.Stock
+      };
+
+      return await _repository.AddNewProductAsync(newProduct);
+    }
   }
+
+
 }

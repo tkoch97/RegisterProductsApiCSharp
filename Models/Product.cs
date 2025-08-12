@@ -1,4 +1,10 @@
 namespace RegisterProductsAPI.Models
 {
-  public record Product(int Id, string Name, decimal Price, int Stock);
+  public class Product()
+  {
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+  };
 }
