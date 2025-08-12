@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using RegisterProductsAPI.Data;
 using RegisterProductsAPI.Interfaces;
@@ -24,6 +25,14 @@ namespace RegisterProductsAPI.Repository
       await _context.Products.AddAsync(newProduct);
       await _context.SaveChangesAsync();
       return newProduct;
+    }
+
+    public async Task<Product> DeleteProductAsync(int id)
+    {
+      var productToDelete = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+      _context.Products.Remove(productToDelete);
+      await _context.SaveChangesAsync();
+      return productToDelete;
     }
   }
 }

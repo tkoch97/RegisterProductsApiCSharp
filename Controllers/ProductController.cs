@@ -50,29 +50,23 @@ namespace RegisterProductsApi.Controllers
       }
       catch (Exception ex)
       {
-        return BadRequest($"Não foi possível adicionar o produto: {ex.Message}");
+        return BadRequest(new { message = $"Não foi possível adicionar o produto: {ex.Message}" });
       }
     }
 
-    // [HttpGet("products/{id}")]
-    // public IActionResult GetById([FromRoute] int id)
-    // {
-    //   var product = products.FirstOrDefault(p => p.Id == id);
-    //   return product == null ? NotFound("Nenhum produto encontrado") : Ok(product);
-    // }
-
-
-    // [HttpDelete("products/{id}")]
-    // public IActionResult DeleteById([FromRoute] int id)
-    // {
-    //   var productToDelete = products.FirstOrDefault(p => p.Id == id);
-    //   if (productToDelete == null)
-    //   {
-    //     return NotFound("Produto não existente");
-    //   }
-    //   products.Remove(productToDelete);
-    //   return Ok($"{productToDelete.Name} exluído(a) com sucesso");
-    // }
+    [HttpDelete("products/{id}")]
+    public async Task<IActionResult> DeleteById([FromRoute] int id)
+    {
+      var DeletedProduct = await _service.DeleteProduct(id);
+      if (DeletedProduct == null)
+      {
+        return NotFound(new { message = "Produto não existente" });
+      }
+      else
+      {
+        return Ok(new { message = $"{DeletedProduct.Name} excluído com sucesso" });
+      }
+    }
 
     // [HttpPut("products/{id}")]
     // public IActionResult UpdateById(
@@ -104,6 +98,13 @@ namespace RegisterProductsApi.Controllers
     //   {
     //     return BadRequest($"Erro ao atualizar o produto. {error.Message}");
     //   }
+    // }
+
+    // [HttpGet("products/{id}")]
+    // public IActionResult GetById([FromRoute] int id)
+    // {
+    //   var product = products.FirstOrDefault(p => p.Id == id);
+    //   return product == null ? NotFound("Nenhum produto encontrado") : Ok(product);
     // }
   }
 }

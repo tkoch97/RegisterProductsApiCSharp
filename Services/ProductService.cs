@@ -30,7 +30,10 @@ namespace RegisterProductsAPI.Services
 
       return await _repository.AddNewProductAsync(newProduct);
     }
+
+    public async Task<Product> DeleteProduct(int id)
+    {
+      return await _repository.DeleteProductAsync(id);
+    }
   }
-
-
 }
