@@ -21,6 +21,11 @@ namespace RegisterProductsAPI.Services
     public async Task<Product> AddNewProduct(CreateProductViewModel newProductData)
     {
 
+      if (string.IsNullOrWhiteSpace(newProductData.Name))
+      {
+        throw new Exception("O título do produto é obrigatório");
+      }
+
       var newProduct = new Product
       {
         Name = newProductData.Name,

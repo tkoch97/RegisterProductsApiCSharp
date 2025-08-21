@@ -20,7 +20,14 @@ namespace RegisterProductsApi.Controllers
       _service = service;
     }
 
+    /// <summary>
+    /// Obter todos os produtos
+    /// </summary>
+    /// <returns>Coleção dos produtos registrados</returns>
+    /// <response code="200">Sucesso</response>
+    /// <response code="400">Erro com a solicitação.</response>
     [HttpGet("products")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
 
@@ -31,11 +38,21 @@ namespace RegisterProductsApi.Controllers
       }
       catch (Exception ex)
       {
-        return NotFound(ex.Message);
+        return BadRequest(ex.Message);
       }
     }
 
+    /// <summary>
+    /// Cadastrar um novo produto.
+    /// </summary>
+    /// <remarks>O campo de título é obrigatório.</remarks>
+    /// <param name="newProductData">Dados do novo produto.</param>
+    /// <returns>Objeto JSON com mensagem de sucesso ou erro.</returns>
+    /// <response code="201">Criado.</response>
+    /// <response code="400">Erro com a solicitação.</response>
     [HttpPost("products")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PostProduct([FromBody] CreateProductViewModel newProductData)
     {
       if (!ModelState.IsValid)
@@ -56,7 +73,16 @@ namespace RegisterProductsApi.Controllers
       }
     }
 
+    /// <summary>
+    /// Deleta um produto.
+    /// </summary>
+    /// <param name="id">Identificador do produto.</param>
+    /// <returns>Objeto JSON com mensagem de sucesso ou erro.</returns>
+    /// <response code="200">Sucesso.</response>
+    /// <response code="404">Não encontrado.</response>
     [HttpDelete("products/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteById([FromRoute] int id)
     {
       var DeletedProduct = await _service.DeleteProduct(id);
@@ -70,7 +96,18 @@ namespace RegisterProductsApi.Controllers
       }
     }
 
+    /// <summary>
+    /// Atualiza um produto.
+    /// </summary>
+    /// <remarks>{"name": "string", "price": 0,"stock": 0}</remarks>
+    /// <param name="id">Identificador do produto.</param>
+    /// <param name="dataToUpdateProduct">Dados do produto.</param>
+    /// <returns>Objeto Json com mensagem de sucesso e produto atualizado ou menagem de erro.</returns>
+    /// <response code="200">Sucesso.</response>
+    /// <response code="400">Erro com a solicitação.</response>
     [HttpPut("products/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateById(
       [FromRoute] int id,
       [FromBody] UpdateProductViewModel dataToUpdateProduct
