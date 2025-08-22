@@ -7,6 +7,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Configurando logging
+builder.Logging.AddConsole();
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+builder.Logging.AddDebug();
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -37,6 +42,9 @@ builder.Services.AddSwaggerGen(s =>
 });
 
 var app = builder.Build();
+
+//Log inicial
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 //Configuração do Swagger, em ambiente de desenvolvimento por padrão.
 if (app.Environment.IsDevelopment())

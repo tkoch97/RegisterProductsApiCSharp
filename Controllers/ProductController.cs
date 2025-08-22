@@ -14,10 +14,12 @@ namespace RegisterProductsApi.Controllers
   public class ProductController : ControllerBase
   {
     private readonly ProductService _service;
+    private readonly ILogger<ProductController> _logger;
 
-    public ProductController(ProductService service)
+    public ProductController(ProductService service, ILogger<ProductController> logger)
     {
       _service = service;
+      _logger = logger;
     }
 
     /// <summary>
@@ -28,17 +30,20 @@ namespace RegisterProductsApi.Controllers
     /// <response code="400">Erro com a solicitação.</response>
     [HttpGet("products")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
-
       try
       {
+        _logger.LogInformation("Recebida requisição para buscar todos os produtos cadastrados.");
         var products = await _service.ListAllProducts();
+        _logger.LogInformation("Retornados {Count} produtos ao cliente.", products.Count);
         return Ok(products);
       }
       catch (Exception ex)
       {
-        return BadRequest(ex.Message);
+        _logger.LogError(ex, "Erro ao buscar todos os produtos cadastrados.");
+        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
       }
     }
 
@@ -53,15 +58,19 @@ namespace RegisterProductsApi.Controllers
     [HttpPost("products")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> PostProduct([FromBody] CreateProductViewModel newProductData)
     {
-      if (!ModelState.IsValid)
+      if (string.IsNullOrWhiteSpace(newProductData.Name))
       {
-        return BadRequest(ModelState);
+        _logger.LogWarning("Requisição inválida: Está faltando o parâmetro name");
+        return BadRequest("O nome do produto é obrigatório.");
       }
       try
       {
+        _logger.LogInformation("Recebida requisição para adicionar o produto {name}", newProductData.Name);
         var newProductAdded = await _service.AddNewProduct(newProductData);
+        _logger.LogInformation("{name} adicionado com sucesso", newProductData.Name);
         return Created($"api/products/{newProductAdded.Id}", new
         {
           message = $"{newProductAdded.Name} adicinado com sucesso!"
@@ -69,7 +78,8 @@ namespace RegisterProductsApi.Controllers
       }
       catch (Exception ex)
       {
-        return BadRequest(new { message = $"Não foi possível adicionar o produto: {ex.Message}" });
+        _logger.LogError(ex, "Erro ao adicionar o produto {name}", newProductData.Name);
+        return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Não foi possível adicionar o produto: {ex.Message}" });
       }
     }
 
@@ -85,13 +95,16 @@ namespace RegisterProductsApi.Controllers
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteById([FromRoute] int id)
     {
+      _logger.LogInformation("Recebida a requisção para deletar o produto com de id {id}", id);
       var DeletedProduct = await _service.DeleteProduct(id);
       if (DeletedProduct == null)
       {
+        _logger.LogWarning("Produto de {id} não encontrado", id);
         return NotFound(new { message = "Produto não existente" });
       }
       else
       {
+        _logger.LogInformation("{name} excluído com sucesso", DeletedProduct.Name);
         return Ok(new { message = $"{DeletedProduct.Name} excluído com sucesso" });
       }
     }
@@ -107,7 +120,7 @@ namespace RegisterProductsApi.Controllers
     /// <response code="400">Erro com a solicitação.</response>
     [HttpPut("products/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateById(
       [FromRoute] int id,
       [FromBody] UpdateProductViewModel dataToUpdateProduct
@@ -119,16 +132,19 @@ namespace RegisterProductsApi.Controllers
       }
       try
       {
+        _logger.LogInformation("Recebida requisição para atualizar o produto de id {id}", id);
         var updatedProduct = await _service.UpdateProduct(id, dataToUpdateProduct);
+        _logger.LogInformation("Produto atualizado com sucesso");
         return Ok(new
         {
           message = "Produto atualizado com sucesso!",
           product = updatedProduct
         });
       }
-      catch (Exception error)
+      catch (Exception ex)
       {
-        return BadRequest(new { message = $"Erro ao atualizar o produto. {error.Message}" });
+        _logger.LogWarning(ex, "Erro ao tentar atualizar o produto.");
+        return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Erro ao atualizar o produto. {ex.Message}" });
       }
     }
 
